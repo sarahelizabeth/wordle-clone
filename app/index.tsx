@@ -3,16 +3,25 @@ import Icon from "@/assets/images/wordle-icon.svg";
 import { Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import ThemedText from "@/components/ThemedText";
+import SubscribeModal from "@/components/SubscribeModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useRef } from "react";
 
 const Index = () => {
   const colorScheme = useColorScheme();
+  const subscribeModalRef = useRef<BottomSheetModal>(null);
   const backgroundColor = Colors[colorScheme ?? 'light'].background;
   const textColor = Colors[colorScheme ?? 'light'].text;
   const buttonBg = Colors[colorScheme ?? 'light'].buttonBg;
   const buttonText = Colors[colorScheme ?? 'light'].buttonText;
 
+  const openSubscribeModal = () => {
+    subscribeModalRef.current?.present();
+  }
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
+      <SubscribeModal ref={subscribeModalRef} />
       <View style={styles.header}>
         <Icon width={100} height={70} />
         <ThemedText style={styles.title}>Wordle</ThemedText>
@@ -22,7 +31,7 @@ const Index = () => {
       <View style={styles.menu}>
         <Link href='/game' style={[styles.button, { backgroundColor: buttonBg }]} asChild>
           <TouchableOpacity>
-            <ThemedText style={[styles.buttonText, { color: buttonText }]}>Start</ThemedText>
+            <Text style={[styles.buttonText, { color: '#fff' }]}>Start</Text>
           </TouchableOpacity>
         </Link>
 
@@ -30,7 +39,7 @@ const Index = () => {
           <ThemedText style={[styles.buttonText, { color: buttonText }]}>Log In</ThemedText>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={openSubscribeModal}>
           <ThemedText style={[styles.buttonText, { color: buttonText }]}>Subscribe</ThemedText>
         </TouchableOpacity>
       </View>
@@ -75,8 +84,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontFamily: "semibold",
-    color: "#333",
     padding: 14,
+    color: "#fff",
   },
   menu: {
     flexDirection: "column",

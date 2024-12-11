@@ -1,10 +1,10 @@
-const GREEN = '#60AB55'; // old green
-const GREEN_LIGHT = '#009933';
-const GREEN_DARK = '#00B33C';
-const YELLOW = '#BCAD4C'; // old yellow
-const YELLOW_LIGHT = '#E8D13B';
-const YELLOW_DARK = '#EBD752';
-const DARK = '#787c7e';
+export const GREEN = '#60AB55'; // old green
+export const GREEN_LIGHT = '#009933';
+export const GREEN_DARK = '#00B33C';
+export const YELLOW = '#BCAD4C'; // old yellow
+export const YELLOW_LIGHT = '#E8D13B';
+export const YELLOW_DARK = '#EBD752';
+export const DARK = '#787c7e';
 
 export const Colors = {
   light: {
