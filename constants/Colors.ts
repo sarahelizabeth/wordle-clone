@@ -1,26 +1,34 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const GREEN = '#60AB55'; // old green
+const GREEN_LIGHT = '#009933';
+const GREEN_DARK = '#00B33C';
+const YELLOW = '#BCAD4C'; // old yellow
+const YELLOW_LIGHT = '#E8D13B';
+const YELLOW_DARK = '#EBD752';
+const DARK = '#787c7e';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: '#000',
+    background: '#DCDCDA',
+    gray: '#9e9e9e',
+    green: GREEN_LIGHT,
+    yellow: YELLOW_LIGHT,
+    dark: DARK,
+    gameBg: '#fff',
+    buttonBg: '#000',
+    buttonText: '#fff',
+    border: '#000',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: '#fff',
+    background: '#000',
+    gameBg: '#000',
+    gray: '#2C2C2E',
+    green: GREEN_DARK,
+    yellow: YELLOW_DARK,
+    dark: DARK,
+    buttonBg: '#fff',
+    buttonText: '#000',
+    border: '#fff',
   },
 };
