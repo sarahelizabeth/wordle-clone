@@ -5,12 +5,7 @@ import ThemedText from '@/components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useState } from 'react';
-
-enum OAuthProvider {
-  Google = 'oauth_google',
-  Apple = 'oauth_apple',
-  Facebook = 'oauth_facebook',
-}
+import { OAuthProvider } from '@/constants/General';
 
 const Login = () => {
   const router = useRouter();
