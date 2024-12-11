@@ -116,12 +116,9 @@ const Game = () => {
     // check if user won or lost
     setTimeout(() => {
       if (currentWord === word) {
-        // TODO: show success
-        console.log('you win');
         router.push(`/finish?win=true&word=${word}&finalBoard=${JSON.stringify(rows)}`);
       } else if (currentRow + 1 >= ROWS) {
-        // TODO: show fail
-        console.log('you failed');
+        router.push(`/finish?win=false&word=${word}&finalBoard=${JSON.stringify(rows)}`);
       }
     }, 1000);
 

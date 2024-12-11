@@ -237,6 +237,8 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalAuthentication (15.0.1):
     - ExpoModulesCore
+  - ExpoMailComposer (14.0.1):
+    - ExpoModulesCore
   - ExpoModulesCore (2.1.1):
     - DoubleConversion
     - glog
@@ -2088,6 +2090,7 @@ DEPENDENCIES:
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinking (from `../node_modules/expo-linking/ios`)
   - ExpoLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
+  - ExpoMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -2212,6 +2215,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linking/ios"
   ExpoLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
+  ExpoMailComposer:
+    :path: "../node_modules/expo-mail-composer/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoSecureStore:
@@ -2384,6 +2389,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 783e68647b969b210a786047c3daa7b753dcac1f
   ExpoLinking: a8332a219379ba80f8e612d5a5de4a3da446886e
   ExpoLocalAuthentication: fb519b5d39df0cc216e43fef3cc8e2db1930a01e
+  ExpoMailComposer: 63589e1cbfa08220b2e650eecac0457be61ddd69
   ExpoModulesCore: f7db8b4faee7e5b94ad55f2bf781781a0bcf934d
   ExpoSecureStore: 06c3192d58ed167f619af3d53797c055f5ada785
   ExpoSplashScreen: 5818efe67bdbcc862b97fef589571c5b4d53fa7d

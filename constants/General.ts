@@ -1,5 +1,5 @@
 // TODO: change back to 6
-export const ROWS = 1;
+export const ROWS = 6;
 export const COLUMNS = 5;
 
 export enum OAuthProvider {
