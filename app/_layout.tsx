@@ -3,7 +3,7 @@ import { useFonts, FrankRuhlLibre_500Medium, FrankRuhlLibre_800ExtraBold, FrankR
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { TouchableOpacity, useColorScheme, LogBox, Appearance } from "react-native";
+import { TouchableOpacity, useColorScheme, LogBox, Appearance, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
@@ -30,7 +30,9 @@ const RootLayout = () => {
   const colorScheme = useColorScheme();
   const [dark] = useMMKVBoolean('dark-mode', storage);
   useEffect(() => {
-    Appearance.setColorScheme(dark ? 'dark' : 'light');
+    if (Platform.OS !== 'web') {
+      Appearance.setColorScheme(dark ? 'dark' : 'light');
+    }
   }, [dark]);
 
   // FONTS LOADING HANDLING
