@@ -94,5 +94,6 @@ const styles = StyleSheet.create({
   keyText: {
     fontSize: 20,
     fontWeight: 'bold',
+    textTransform: 'uppercase',
   }
 })

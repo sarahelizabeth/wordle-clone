@@ -1,11 +1,12 @@
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
 import { useOAuth } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
-import ThemedText from '@/components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useState } from 'react';
 import { OAuthProvider } from '@/constants/General';
+import { useThemedStyles } from '@/hooks/useThemedStyles';
+import ThemedText from '@/components/ThemedText';
 
 const Login = () => {
   const router = useRouter();
@@ -13,7 +14,8 @@ const Login = () => {
   const { startOAuthFlow: appleOAuthFlow } = useOAuth({ strategy: OAuthProvider.Apple });
   const { startOAuthFlow: facebookOAuthFlow } = useOAuth({ strategy: OAuthProvider.Facebook });
   const [email, setEmail] = useState('');
-
+  const defaultStyles = useThemedStyles();
+  const colorScheme = useColorScheme();
   // TODO: Add email login
   
   const onSelectAuthProvider = async (strategy: OAuthProvider) => {
@@ -37,16 +39,16 @@ const Login = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Login or create an account</Text>
-      <Text style={styles.subheader}>
-        By continuing, you agree to our <Text style={styles.link}>Terms of Service</Text> and <Text style={styles.link}>Privacy Policy</Text>
-      </Text>
+    <ScrollView style={[styles.container, defaultStyles.container]}>
+      <ThemedText style={styles.header}>Login or create an account</ThemedText>
+      <ThemedText style={styles.subheader}>
+        By continuing, you agree to our <ThemedText style={styles.link}>Terms of Service</ThemedText> and <ThemedText style={styles.link}>Privacy Policy</ThemedText>
+      </ThemedText>
       <View style={styles.emailContainer}>
-        <Text style={styles.label}>Email address</Text>
+        <ThemedText style={styles.label}>Email address</ThemedText>
         <TextInput style={styles.input} placeholder='Email address' value={email} onChangeText={setEmail} />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Continue with email</Text>
+        <TouchableOpacity style={[styles.button, defaultStyles.button]}>
+          <Text style={[styles.buttonText, defaultStyles.buttonText]}>Continue with email</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.divider}>
@@ -56,15 +58,15 @@ const Login = () => {
       </View>
       <View style={styles.oauthContainer}>
         <TouchableOpacity style={styles.outlineButton} onPress={() => onSelectAuthProvider(OAuthProvider.Google)}>
-          <Ionicons name="logo-google" size={24} color="#000" style={{ paddingRight: 12 }}/>
+          <Ionicons name="logo-google" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} style={{ paddingRight: 12 }}/>
           <ThemedText style={styles.oauthButtonText}>Continue with Google</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.outlineButton} onPress={() => onSelectAuthProvider(OAuthProvider.Apple)}>
-          <Ionicons name="logo-apple" size={24} color="#000" style={{ paddingRight: 12 }}/>
+          <Ionicons name="logo-apple" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} style={{ paddingRight: 12 }}/>
           <ThemedText style={styles.oauthButtonText}>Continue with Apple</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.outlineButton} onPress={() => onSelectAuthProvider(OAuthProvider.Facebook)}>
-          <Ionicons name="logo-facebook" size={24} color="#000" style={{ paddingRight: 12 }}/>
+          <Ionicons name="logo-facebook" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} style={{ paddingRight: 12 }}/>
           <ThemedText style={styles.oauthButtonText}>Continue with Facebook</ThemedText>
         </TouchableOpacity>
       </View>
@@ -113,14 +115,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#000',
     padding: 10,
-    borderRadius: 5,
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
     textAlign: 'center',
+    fontSize: 12,
   },
   divider: {
     flexDirection: 'row',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   dividerLine: {
     flex: 1,
-    borderBottomColor: 'black',
+    borderBottomColor: Colors.light.gray,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   dividerText: {
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
   },
   oauthContainer: {
     marginTop: 20,
+    gap: 10,
   },
   oauthTitle: {
     fontSize: 15,
@@ -158,7 +159,6 @@ const styles = StyleSheet.create({
   },
   oauthButtonText: {
     fontSize: 16,
-    color: '#4f4f4f',
     fontWeight: '500',
   },
 });

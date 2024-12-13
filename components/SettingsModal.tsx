@@ -5,6 +5,8 @@ import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { Colors } from '@/constants/Colors';
+import { storage } from '@/utils/storage';
+import { useMMKVBoolean } from 'react-native-mmkv';
 
 export type SettingsModalRef = BottomSheetModal;
 
@@ -17,12 +19,20 @@ const SettingsModal = forwardRef<SettingsModalRef>((props, ref) => {
   const switchOffColor = colorScheme === 'dark' ? Colors.dark.gray : Colors.light.gray;
   const switchOnColor = colorScheme === 'dark' ? Colors.dark.green : Colors.light.green;
 
-  const [darkMode, setDarkMode] = useState(false);
-  const [hardMode, setHardMode] = useState(false);
-  const [highContrastMode, setHighContrastMode] = useState(false);
+  const [darkMode, setDarkMode] = useMMKVBoolean('dark-mode', storage);
+  const [hardMode, setHardMode] = useMMKVBoolean('hard-mode', storage);
+  const [highContrastMode, setHighContrastMode] = useMMKVBoolean('high-contrast-mode', storage);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => !!!prev);
+  }
 
   const toggleHardMode = () => {
-    setHardMode(!hardMode);
+    setHardMode((prev) => !!!prev);
+  }
+
+  const toggleHighContrastMode = () => {
+    setHighContrastMode((prev) => !!!prev);
   }
 
   const renderBackdrop = useCallback((props: any) => (
@@ -44,9 +54,14 @@ const SettingsModal = forwardRef<SettingsModalRef>((props, ref) => {
       handleComponent={null}
       index={0}
     >
-      <View style={styles.contentContainer}>
+      <View
+        style={[
+          styles.contentContainer,
+          { backgroundColor: colorScheme === 'dark' ? Colors.dark.background : Colors.light.background },
+        ]}
+      >
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>SETTINGS</Text>
+          <Text style={[styles.title, { color: Colors[colorScheme ?? 'light'].text }]}>SETTINGS</Text>
           <TouchableOpacity onPress={() => dismiss()}>
             <Ionicons name='close' size={28} color={Colors.light.gray} />
           </TouchableOpacity>
@@ -54,7 +69,7 @@ const SettingsModal = forwardRef<SettingsModalRef>((props, ref) => {
         <View>
           <View style={styles.settingRow}>
             <View style={styles.textContainer}>
-              <Text style={styles.settingText}>Hard Mode</Text>
+              <Text style={[styles.settingText, { color: Colors[colorScheme ?? 'light'].text }]}>Hard Mode</Text>
               <Text style={styles.settingDescription}>Words are more difficult and/or obscure</Text>
             </View>
             <Switch
@@ -66,24 +81,24 @@ const SettingsModal = forwardRef<SettingsModalRef>((props, ref) => {
           </View>
           <View style={styles.settingRow}>
             <View style={styles.textContainer}>
-              <Text style={styles.settingText}>Dark Mode</Text>
+              <Text style={[styles.settingText, { color: Colors[colorScheme ?? 'light'].text }]}>Dark Mode</Text>
               <Text style={styles.settingDescription}>Change the app to dark mode</Text>
             </View>
             <Switch
               value={darkMode}
-              onValueChange={() => {}}
+              onValueChange={toggleDarkMode}
               trackColor={{ false: switchOffColor, true: switchOnColor }}
               thumbColor='#fff'
             />
           </View>
           <View style={styles.settingRow}>
             <View style={styles.textContainer}>
-              <Text style={styles.settingText}>High Contrast Mode</Text>
+              <Text style={[styles.settingText, { color: Colors[colorScheme ?? 'light'].text }]}>High Contrast Mode</Text>
               <Text style={styles.settingDescription}>Increase contrast for better visibility</Text>
             </View>
             <Switch
               value={highContrastMode}
-              onValueChange={() => {}}
+              onValueChange={toggleHighContrastMode}
               trackColor={{ false: switchOffColor, true: switchOnColor }}
               thumbColor='#fff'
             />
@@ -99,7 +114,6 @@ export default SettingsModal;
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -129,6 +143,7 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: Colors.light.gray,
   },
   settingDescription: {
     fontSize: 12,

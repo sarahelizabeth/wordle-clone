@@ -12,4 +12,4 @@ const ThemedText = ({ style, children, ...props }: TextProps) => {
   )
 }
 
-export default ThemedText
+export default ThemedText;

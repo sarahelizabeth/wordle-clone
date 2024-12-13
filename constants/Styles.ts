@@ -1,17 +1,24 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import { Colors } from "@/constants/Colors";
 
-export const defaultStyles = StyleSheet.create({
+// Move styles outside component
+export const createStyles = (isDark: boolean) => StyleSheet.create({
   button: {
     height: 50,
     borderRadius: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.light.buttonBg,
+    backgroundColor: isDark ? Colors.dark.buttonBg : Colors.light.buttonBg,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.light.buttonText,
+    color: isDark ? Colors.dark.buttonText : Colors.light.buttonText,
   },
+  container: {
+    flex: 1,
+    backgroundColor: isDark ? Colors.dark.background : Colors.light.background,
+  }
 });
+
+// export default createStyles;

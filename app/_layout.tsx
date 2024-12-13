@@ -3,7 +3,7 @@ import { useFonts, FrankRuhlLibre_500Medium, FrankRuhlLibre_800ExtraBold, FrankR
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { TouchableOpacity, useColorScheme, LogBox, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, useColorScheme, LogBox, Appearance } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
@@ -11,6 +11,8 @@ import { tokenCache } from "../utils/cache";
 import Logo from "../assets/images/nyt-logo.svg";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { Ionicons } from "@expo/vector-icons";
+import { storage } from "@/utils/storage";
+import { useMMKVBoolean } from "react-native-mmkv";
 
 LogBox.ignoreAllLogs();
 
@@ -22,20 +24,26 @@ if (!publishableKey) {
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
+  const router = useRouter();
+
+  // DARK MODE HANDLING
   const colorScheme = useColorScheme();
+  const [dark] = useMMKVBoolean('dark-mode', storage);
+  useEffect(() => {
+    Appearance.setColorScheme(dark ? 'dark' : 'light');
+  }, [dark]);
+
+  // FONTS LOADING HANDLING
   const [fontsLoaded, fontsError] = useFonts({
     FrankRuhlLibre_500Medium,
     FrankRuhlLibre_800ExtraBold,
     FrankRuhlLibre_900Black,
   });
-  const router = useRouter();
-
   useEffect(() => {
     if (fontsLoaded || fontsError) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontsError]);
-
   if (!fontsLoaded && !fontsError) {
     return null;
   }
@@ -52,13 +60,17 @@ const RootLayout = () => {
                   name='login'
                   options={{
                     presentation: 'modal',
-                    headerShadowVisible: false,
+                    // headerShadowVisible: false,
                     headerTitle: () => <Logo width={150} height={40} />,
                     headerLeft: () => (
                       <TouchableOpacity onPress={() => router.back()}>
                         <Ionicons name='close' size={26} color={Colors.light.gray} />
                       </TouchableOpacity>
                     ),
+                    headerTintColor: Colors.light.yellow,
+                    headerStyle: {
+                      backgroundColor: colorScheme === 'dark' ? '#dcdcda' : '#fff',
+                    },
                   }}
                 />
                 <Stack.Screen
@@ -85,13 +97,5 @@ const RootLayout = () => {
     </ClerkProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  backText: {
-    fontSize: 18,
-    fontFamily: 'FrankRuhlLibre_900Black',
-    marginLeft: 10,
-  }
-})
 
 export default RootLayout;

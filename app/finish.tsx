@@ -1,11 +1,16 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, useColorScheme } from 'react-native'
 import { Link, useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import Icon from '@/assets/images/wordle-icon.svg';
-import { SignedIn, SignedOut } from '@clerk/clerk-expo';
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
 import * as MailComposer from 'expo-mail-composer';
+import { FIRESTORE_DB } from '@/utils/firebaseConfig';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { useThemedStyles } from '@/hooks/useThemedStyles';
+import ThemedText from '@/components/ThemedText';
+
 const Finish = () => {
   const { win, word, finalBoard } = useLocalSearchParams<{
     win: string;
@@ -13,14 +18,46 @@ const Finish = () => {
     finalBoard: string;
   }>();
   const router = useRouter();
-  const [userScore, setUserScore] = useState<any>({
-    played: 42,
-    wins: 2,
-    currentStreak: 1,
-  });
-  const numberGuesses = finalBoard.split(',').length;
+  const [userScore, setUserScore] = useState<any>({});
+  const { user } = useUser();
   const colorScheme = useColorScheme();
   const greenColor = colorScheme === 'dark' ? Colors.dark.green : Colors.light.green;
+  const defaultStyles = useThemedStyles();
+
+  useEffect(() => {
+    if (user) {
+      updateHighScore();
+    }
+  }, [user]);
+
+  const updateHighScore = async () => {
+    if (!user) return;
+
+    const docRef = doc(FIRESTORE_DB, `highscore/${user.id}`);
+    const docSnap = await getDoc(docRef);
+
+    let newScore = {
+      played: 1,
+      wins: win === 'true' ? 1 : 0,
+      lastGame: win === 'true' ? 'win' : 'loss',
+      currentStreak: win === 'true' ? 1 : 0,
+    }
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      console.log(data);
+
+      newScore = {
+        played: data.played + 1,
+        wins: data.wins + (win === 'true' ? 1 : 0),
+        lastGame: win === 'true' ? 'win' : 'loss',
+        currentStreak: win === 'true' && data.lastGame === 'win' ? data.currentStreak + 1 : win === 'true' ? 1 : 0,
+      }
+    }
+
+    await setDoc(docRef, newScore);
+    setUserScore(newScore);
+  }
 
   const navigateRoot = () => {
     router.dismissAll();
@@ -88,43 +125,43 @@ const Finish = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, defaultStyles.container]}>
       <TouchableOpacity onPress={navigateRoot} style={{ alignSelf: 'flex-end' }}>
         <Ionicons name='close' size={30} color={Colors.light.gray} />
       </TouchableOpacity>
 
       <View style={{ alignItems: 'center', gap: 10 }}>
         {win === 'true' ? <Image source={require('@/assets/images/win.png')} /> : <Icon width={100} height={70} />}
-        <Text style={styles.title}>{win === 'true' ? 'Congratulations!' : 'You Lost'}</Text>
+        <ThemedText style={styles.title}>{win === 'true' ? 'Congratulations!' : 'You Lost'}</ThemedText>
 
         <SignedIn>
-          <Text style={styles.text}>Statistics</Text>
+          <ThemedText style={styles.text}>Statistics</ThemedText>
           <View style={styles.statsContainer}>
             <View style={styles.statsItem}>
-              <Text style={styles.statsItemValue}>{userScore?.played}</Text>
-              <Text style={styles.statsItemTitle}>Played</Text>
+              <ThemedText style={styles.statsItemValue}>{userScore?.played}</ThemedText>
+              <ThemedText style={styles.statsItemTitle}>Played</ThemedText>
             </View>
             <View style={styles.statsItem}>
-              <Text style={styles.statsItemValue}>{userScore?.wins}</Text>
-              <Text style={styles.statsItemTitle}>Wins</Text>
+              <ThemedText style={styles.statsItemValue}>{userScore?.wins}</ThemedText>
+              <ThemedText style={styles.statsItemTitle}>Wins</ThemedText>
             </View>
             <View style={styles.statsItem}>
-              <Text style={styles.statsItemValue}>{userScore?.currentStreak}</Text>
-              <Text style={styles.statsItemTitle}>Streak</Text>
+              <ThemedText style={styles.statsItemValue}>{userScore?.currentStreak}</ThemedText>
+              <ThemedText style={styles.statsItemTitle}>Streak</ThemedText>
             </View>
           </View>
         </SignedIn>
 
         <SignedOut>
-          <Text style={styles.text}>Want to see your stats and streaks?</Text>
+          <ThemedText style={styles.text}>Want to see your stats and streaks?</ThemedText>
           <Link href={'/login'} style={[styles.button, { backgroundColor: colorScheme === 'dark' ? Colors.dark.buttonBg : Colors.light.buttonBg }]} asChild>
             <TouchableOpacity>
-              <Text style={styles.buttonText}>Create a free account</Text>
+              <Text style={[styles.buttonText, defaultStyles.buttonText]}>Create a free account</Text>
             </TouchableOpacity>
           </Link>
           <Link href={'/login'} asChild>
             <TouchableOpacity>
-              <Text style={styles.linkText}>Already have an account? Log in</Text>
+              <Text style={[styles.linkText, { color: colorScheme === 'dark' ? Colors.dark.text : Colors.light.text }]}>Already have an account? Log in</Text>
             </TouchableOpacity>
           </Link>
         </SignedOut>

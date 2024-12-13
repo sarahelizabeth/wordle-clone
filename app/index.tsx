@@ -7,6 +7,9 @@ import SubscribeModal from "@/components/SubscribeModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import { SignedIn, SignedOut, useAuth } from "@clerk/clerk-expo";
+import Animated, { FadeIn, FadeInDown, FadeInLeft } from "react-native-reanimated";
+
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 const Index = () => {
   const colorScheme = useColorScheme();
@@ -23,45 +26,53 @@ const Index = () => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <Animated.View style={[styles.container, { backgroundColor }]}>
       <SubscribeModal ref={subscribeModalRef} />
-      <View style={styles.header}>
+      <Animated.View style={styles.header} entering={FadeInDown}>
         <Icon width={100} height={70} />
         <ThemedText style={styles.title}>Wordle</ThemedText>
         <ThemedText style={styles.text}>Get 6 chances to guess the 5-letter word</ThemedText>
-      </View>
+      </Animated.View>
 
       <View style={styles.menu}>
         <Link href='/game' style={[styles.button, { backgroundColor: buttonBg }]} asChild>
-          <TouchableOpacity>
-            <Text style={[styles.buttonText, { color: '#fff' }]}>Start</Text>
-          </TouchableOpacity>
+          <AnimatedTouchableOpacity entering={FadeInLeft}>
+            <Text style={[styles.buttonText, { color: buttonText }]}>Start</Text>
+          </AnimatedTouchableOpacity>
         </Link>
 
         <SignedOut>
-          <Link href='/login' style={styles.button} asChild>
-            <TouchableOpacity>
-            <ThemedText style={[styles.buttonText, { color: buttonText }]}>Log In</ThemedText>
-            </TouchableOpacity>
+          <Link href='/login' style={[styles.button, { borderColor: textColor }]} asChild>
+            <AnimatedTouchableOpacity entering={FadeInLeft.delay(100)}>
+              <ThemedText style={[styles.buttonText, { color: buttonText }]}>Log In</ThemedText>
+            </AnimatedTouchableOpacity>
           </Link>
         </SignedOut>
 
         <SignedIn>
-          <TouchableOpacity style={styles.button} onPress={() => signOut()}>
+          <AnimatedTouchableOpacity 
+            style={[styles.button, { borderColor: textColor }]} 
+            onPress={() => signOut()}
+            entering={FadeInLeft.delay(100)}
+          >
             <ThemedText style={[styles.buttonText, { color: buttonText }]}>Sign Out</ThemedText>
-          </TouchableOpacity>
+          </AnimatedTouchableOpacity>
         </SignedIn>
 
-        <TouchableOpacity style={styles.button} onPress={openSubscribeModal}>
+        <AnimatedTouchableOpacity 
+          style={[styles.button, { borderColor: textColor }]} 
+          onPress={openSubscribeModal}
+          entering={FadeInLeft.delay(200)}
+        >
           <ThemedText style={[styles.buttonText, { color: buttonText }]}>Subscribe</ThemedText>
-        </TouchableOpacity>
+        </AnimatedTouchableOpacity>
       </View>
 
-      <View style={styles.footer}>
+      <Animated.View style={styles.footer} entering={FadeIn.delay(300)}>
         <ThemedText style={[styles.text, { color: textColor }]}>How to play</ThemedText>
         <ThemedText style={[styles.text, { color: textColor }]}>Made with ❤️ by Sarah</ThemedText>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 }
 

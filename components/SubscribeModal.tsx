@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { defaultStyles } from '@/constants/Styles';
+import { createStyles } from '@/constants/Styles';
 import { BENEFITS, DISCLAIMER } from '@/constants/General';
 
 export type SubscribeModalRef = BottomSheetModal;
@@ -17,7 +17,7 @@ const SubscribeModal = forwardRef<SubscribeModalRef>((props, ref) => {
   const snapPoints = useMemo(() => ['90%'], []);
   const { dismiss } = useBottomSheetModal();
   const { bottom } = useSafeAreaInsets();
-
+  const defaultStyles = createStyles(false);
   const renderBackdrop = useCallback((props: any) => (
     <BottomSheetBackdrop
       opacity={0.2}
